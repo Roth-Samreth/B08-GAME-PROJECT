@@ -9,42 +9,29 @@ JUMP_FORCE = 30
 # Variable
 keyPressed = []
 x = 20
-y = 520
+y = 430
 root = Tk(str(SCREENWIDTH)+"x"+str(SCREENHEIGHT))
 canvas = Canvas(root,width=1150,height=600,scrollregion=(0,0,4000,5000))
 back = PhotoImage(file="Image/10.png")
 bg = canvas.create_image(20,20,image=back)
 pp = PhotoImage(file="Image/Run1.png")
-player = canvas.create_image(45,430,image=pp)
+player = canvas.create_image(45,300,image=pp)
 # _________________________________________________________Enemy__________________________________________
-
 pf1 = PhotoImage(file="Image/Fighter.png")
-enemy = canvas.create_image(400,350,image=pf1)
 
 # Create platform
 tile1 = PhotoImage(file="Image/Tile_01.png")
-for j in range(3):
-    for i in range(8):
-        tiles = canvas.create_image(x, y, image=tile1, tag = 'PLATFORM')
-        x += 30
-    x=20
-    y+=30
-x1=400
-y1=420
-for n in range(8):
-    y1=420
-    for m in range(2):
-        tiles = canvas.create_image(x1, y1, image=tile1, tag = 'PLATFORM')
-        y1 += 30
-    x1+=30
-x2=x1+150
-y2=320
-for n in range(8):
-    y2=320
-    for m in range(2):
-        tiles = canvas.create_image(x2, y2, image=tile1, tag = 'PLATFORM')
-        y2 += 30
-    x2+=30
+def create_platform(x,y,row,col):
+    X = x
+    Y = y
+    for j in range(row):
+        for i in range(col):
+            tiles = canvas.create_image(X, Y, image=tile1, tag='PLATFORM')
+            X += 30
+        X = x
+        Y += 30
+create_platform(20,400,5,8)
+create_platform(340,300,4,8)
 # Funtions
 def check_movement(dx=0, dy=0, checkGround=False):
     coord = canvas.bbox(player)
@@ -89,9 +76,7 @@ def stop_move(event):
     global keyPressed
     if event.keysym in keyPressed:
         keyPressed.remove(event.keysym)
-def enemove():
-    canvas.move(player, GRAVITY_FORCE, 0)
-    root.after(TIMED_LOOP, enemove)
+
 def gravity():
     if check_movement(0, GRAVITY_FORCE, True):
         canvas.move(player, 0, GRAVITY_FORCE)
