@@ -32,6 +32,8 @@ def create_platform(x,y,row,col):
         Y += 30
 create_platform(20,400,5,8)
 create_platform(340,300,4,8)
+create_platform(650,400,1,4)
+create_platform(800,560,2,8)
 # Funtions
 def check_movement(dx=0, dy=0, checkGround=False):
     coord = canvas.bbox(player)
