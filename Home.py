@@ -14,7 +14,7 @@ JUMP_FORCE = 30
 keyPressed = []
 x = 20
 y = 430
-
+k = 2
 # ____________________Create window
 root = Tk()
 root.geometry(str(SCREENWIDTH)+"x"+str(SCREENHEIGHT))
@@ -30,6 +30,13 @@ back = ImageTk.PhotoImage(bg)
 user = ImageTk.PhotoImage(pp)
 oppose = ImageTk.PhotoImage(en)
 tile_1 = ImageTk.PhotoImage(tile)
+img2 = ImageTk.PhotoImage(Image.open("Image/Run2.png"))
+img3 = ImageTk.PhotoImage(Image.open("Image/Run3.png"))
+img4 = ImageTk.PhotoImage(Image.open("Image/Run4.png"))
+img5 = ImageTk.PhotoImage(Image.open("Image/Run5.png"))
+img6 = ImageTk.PhotoImage(Image.open("Image/Run6.png"))
+img7 = ImageTk.PhotoImage(Image.open("Image/Run7.png"))
+img8 = ImageTk.PhotoImage(Image.open("Image/Run8.png"))
 # Put the Background
 backGround = canvas.create_image(0,0,image=back)
 # Functions
@@ -60,6 +67,26 @@ def check_movement(dx=0, dy=0, checkGround=False):
             return False
 
     return True
+def change():
+    global k
+    if k == 8:
+        k=2
+    if k == 2:
+        canvas.itemconfig(player,image=img2)
+    elif k == 3:
+        canvas.itemconfig(player,image=img3)
+    elif k == 4:
+        canvas.itemconfig(player,image=img4)
+    elif k == 5:
+        canvas.itemconfig(player,image=img5)
+    elif k == 6:
+        canvas.itemconfig(player,image=img6)
+    elif k == 7:
+        canvas.itemconfig(player,image=img7)
+    elif k == 8:
+        canvas.itemconfig(player,image=img8)
+    k+=1
+    root.after(200,change)
 def jump(force):
     if force > 0:
         if check_movement(0, -force):
@@ -72,6 +99,7 @@ def move():
             x -= SPEED
         if "Right" in keyPressed:
             x += SPEED
+            change()
         if "space" in keyPressed and not check_movement(0, GRAVITY_FORCE, True):
             jump(JUMP_FORCE)
         if check_movement(x):
