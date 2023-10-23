@@ -1,6 +1,7 @@
 # ____________________Import library
 from tkinter import *
 from PIL import Image,ImageTk
+import winsound
 
 # ___________________Constant
 SCREENWIDTH = 1150
@@ -18,6 +19,7 @@ k = 2
 # ____________________Create window
 root = Tk()
 root.geometry(str(SCREENWIDTH)+"x"+str(SCREENHEIGHT))
+root.title("Shinobi Run")
 canvas = Canvas(root,width= SCREENWIDTH,height=SCREENHEIGHT)
 # Load image
 bg = Image.open("Image/10.png")
@@ -67,6 +69,10 @@ def check_movement(dx=0, dy=0, checkGround=False):
             return False
 
     return True
+def jumpsound():
+    winsound.PlaySound("sound/Jump.wav", winsound.SND_ASYNC)
+def startGame():
+    winsound.PlaySound("sound/yo.wav", winsound.SND_ASYNC)
 def change():
     global k
     if k == 8:
@@ -93,6 +99,7 @@ def jump(force):
             canvas.move(player, 0, -force)
         root.after(TIMED_LOOP, jump, force-1)
 def move():
+    global player
     if not keyPressed == []:
         x = 0
         if "Left" in keyPressed:
@@ -102,6 +109,7 @@ def move():
             change()
         if "space" in keyPressed and not check_movement(0, GRAVITY_FORCE, True):
             jump(JUMP_FORCE)
+            jumpsound()
         if check_movement(x):
             canvas.move(player, x, 0)
         root.after(TIMED_LOOP, move)
@@ -123,8 +131,9 @@ def level_1():
     canvas.delete("all")
     btn.destroy()
     exitBtn.destroy()
+    startGame()
     backGround = canvas.create_image(0,0,image=back)
-    player = canvas.create_image(45, 340, image=user)
+    player = canvas.create_image(30, 340, image=user)
     create_platform(20, 400, 5, 8)
     create_platform(340, 300, 4, 8)
     create_platform(650, 400, 1, 4)
