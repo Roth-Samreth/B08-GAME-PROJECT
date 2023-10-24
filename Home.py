@@ -16,6 +16,7 @@ keyPressed = []
 x = 20
 y = 430
 k = 2
+result =  0
 # ____________________Create window
 root = Tk()
 root.geometry(str(SCREENWIDTH)+"x"+str(SCREENHEIGHT))
@@ -45,6 +46,7 @@ backGround = canvas.create_image(0,0,image=back)
 def create_platform(x,y,row,col):
     X = x
     Y = y
+    global tiles
     for j in range(row):
         for i in range(col):
             tiles = canvas.create_image(X, Y, image=tile_1, tag='PLATFORM')
@@ -73,6 +75,11 @@ def jumpsound():
     winsound.PlaySound("sound/Jump.wav", winsound.SND_ASYNC)
 def startGame():
     winsound.PlaySound("sound/yo.wav", winsound.SND_ASYNC)
+def death():
+    global tiles
+    canvas.delete('tiles')
+    winsound.PlaySound("sound/Hurt.wav", winsound.SND_PURGE)
+    canvas.create_text(580, 200, text="You Died", font=("Metal Mania", 50), fill="red")
 def change():
     global k
     if k == 8:
@@ -122,9 +129,15 @@ def stop_move(event):
     global keyPressed
     if event.keysym in keyPressed:
         keyPressed.remove(event.keysym)
+
 def gravity():
+    global tiles
     if check_movement(0, GRAVITY_FORCE, True):
         canvas.move(player, 0, GRAVITY_FORCE)
+        if canvas.bbox(player)[3] > 600:
+            checkGround = False
+            if checkGround == False:
+                death()
     root.after(TIMED_LOOP, gravity)
 def level_1():
     global backGround,player
@@ -139,6 +152,7 @@ def level_1():
     create_platform(650, 400, 1, 4)
     create_platform(800, 560, 2, 8)
     gravity()
+
 # Game Start Screen
 title = canvas.create_text(580,200,text="Shinobi Run",font=("Metal Mania",50),fill="white")
 # Button
