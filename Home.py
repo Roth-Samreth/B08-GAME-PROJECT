@@ -152,6 +152,23 @@ def level_1():
     create_platform(650, 400, 1, 4)
     create_platform(800, 560, 2, 8)
     gravity()
+def level_2():
+    global backGround,player
+    canvas.delete("all")
+    btn.destroy()
+    exitBtn.destroy()
+    startGame()
+    backGround = canvas.create_image(0,0,image=back)
+    player = canvas.create_image(30, 340, image=user)
+    create_platform(20,500,5,6)
+    create_platform(280,400,5,3)
+    create_platform(440,280,2,4)
+    create_platform(500,460,2,8)
+    create_platform(770,360,4,2)
+    create_platform(890,260,4,2)
+    create_platform(950,480,2,6)
+    create_platform(1020,150,2,5)
+    gravity()
 
 # Game Start Screen
 title = canvas.create_text(580,200,text="Shinobi Run",font=("Metal Mania",50),fill="white")
