@@ -11,12 +11,19 @@ SPEED = 7
 TIMED_LOOP = 10
 JUMP_FORCE = 30
 
+GAMESTATUS_STAR = 0
+GAMESTATUS_LEVEL_1 = 1
+GAMESTATUS_MLEVEL_2 = 2
+GAMESTATUS_LEVEL_3 = 3
+GAMESTATUS_OVER = 4
+
 # Variable
 keyPressed = []
 x = 20
 y = 430
 k = 2
-result =  0
+speed = 5
+direction = 1
 # ____________________Create window
 root = Tk()
 root.geometry(str(SCREENWIDTH)+"x"+str(SCREENHEIGHT))
@@ -154,19 +161,6 @@ def enemy_male_back():
     k+=1
 
 #     Moving enemy
-def move_Enemy_R():
-        canvas.move(enemy_males,10,0)
-        enemy_male()
-def move_Enemy_L():
-        canvas.move(enemy_males, -10, 0)
-        enemy_male_back()
-def move_enemy_male():
-    eMcoord = canvas.bbox(enemy_males)
-    if  eMcoord[0] < 325 and eMcoord[2] < 565:
-        move_Enemy_R()
-    # elif  eMcoord[0] < 325 and eMcoord[2] > 565:
-    #     move_Enemy_L()
-    root.after(110,move_enemy_male)
 def create_platform(x,y,row,col):
     X = x
     Y = y
@@ -190,6 +184,31 @@ def place_coint(x,y,row,col):
             X += 35
         X = x
         Y += 30
+def check_collision(image1, image2):
+    x1, y1, x2, y2 = canvas.bbox(image1)
+    x3, y3, x4, y4 = canvas.bbox(image2)
+
+    if (x1 < x4 and x2 > x3) and (y1 < y4 and y2 > y3):
+        return True
+    else:
+        return False
+    
+def check_collision_loop_coin():
+    if check_collision(player, coins):
+        canvas.create_text(580, 200, text="You've won", font=("Metal Mania", 50), fill="white")
+        winsound.PlaySound("sound/victory.wav", winsound.SND_ASYNC)
+        canvas.delete(coins)
+    else:
+        root.after(10, check_collision_loop_coin)
+
+def lost():
+    global restart
+    if check_collision(player, enemy_males):
+        canvas.create_text(580, 200, text="You Died", font=("Metal Mania", 50), fill="red")
+        canvas.move(player,0,500)
+    else:
+        root.after(10,lost)
+
 def check_movement(dx=0, dy=0, checkGround=False):
     global player
     coord = canvas.bbox(player)
@@ -211,12 +230,12 @@ def check_movement(dx=0, dy=0, checkGround=False):
 def jumpsound():
     winsound.PlaySound("sound/Jump.wav", winsound.SND_ASYNC)
 def startGame():
-    winsound.PlaySound("sound/yo.wav", winsound.SND_ASYNC)
-    
+    winsound.PlaySound("sound/Theme.wav", winsound.SND_ASYNC)
+
 def death():
     global tiles
     canvas.delete('tiles')
-    # winsound.PlaySound("sound/Hurt.wav", winsound.SND_NOWAIT)
+    winsound.PlaySound("sound/Hurt.wav", winsound.SND_ASYNC)
     canvas.create_text(580, 200, text="You Died", font=("Metal Mania", 50), fill="red")
 def jump(force):
     if force > 0:
@@ -248,7 +267,30 @@ def stop_move(event):
     global keyPressed
     if event.keysym in keyPressed:
         keyPressed.remove(event.keysym)
-
+# Define the animation function
+def animate():
+    global direction
+    x, y = canvas.coords(enemy_males)
+    if x + speed * direction > 550 or x + speed * direction < 340:
+        direction = -direction
+        canvas.move(enemy_males, speed * direction, 0)
+        enemy_male_back()
+    else:
+        enemy_male()
+        canvas.move(enemy_males, speed * direction, 0)
+    root.after(100, animate)
+def animate1():
+    global direction
+    x, y = canvas.coords(enemy_males)
+    if x + speed * direction > 1080 or x + speed * direction < 1150:
+        # Reverse the direction
+        direction = -direction
+        canvas.move(enemy_males, speed * direction, 0)
+        enemy_male_back()
+    else:
+        enemy_male()
+        canvas.move(enemy_males, speed * direction, 0)
+    root.after(100, animate)
 def gravity():
     global tiles
     if check_movement(0, GRAVITY_FORCE, True):
@@ -261,30 +303,40 @@ def level_1():
     canvas.delete("all")
     btn.destroy()
     exitBtn.destroy()
+    level1_btn.destroy()
+    level2_btn.destroy()
+    level_btn.destroy()
     startGame()
-    winsound.PlaySound("sound/Theme.wav", winsound.SND_ASYNC)
     backGround = canvas.create_image(0,0,image=back)
     backGround = canvas.create_image(1150, 0, image=back)
     backGround = canvas.create_image(2000, 0, image=back)
     player = canvas.create_image(30, 340, image=user)
-    enemy_males = canvas.create_image(340, 240, image=oppose)
     create_platform(20, 400, 5, 8)
     # place_coint(80,340,1,5)
-    hid_rect = canvas.create_rectangle(325,300,565,340,fill="blue")
+    create_platform(440, 150, 2, 2)
     create_platform(340, 300, 4, 8)
     create_platform(650, 400, 1, 4)
     create_platform(900, 560, 2, 7)
     create_platform(1000, 260, 1, 3)
     coins = canvas.create_image(900, 200, image=coin_1)
+    enemy_males = canvas.create_image(340, 240, image=oppose, anchor="center")
     gravity()
+    animate1()
+    check_collision_loop_coin()
+    lost()
 def level_2():
-    global backGround,player
+    global backGround,player,coins,enemy_males
     canvas.delete("all")
     btn.destroy()
     exitBtn.destroy()
+    level1_btn.destroy()
+    level2_btn.destroy()
+    level_btn.destroy()
     startGame()
     backGround = canvas.create_image(0,0,image=back)
-    player = canvas.create_image(30, 340, image=user)
+    player = canvas.create_image(30, 350, image=user)
+    coins = canvas.create_image(1080, 100, image=coin_1)
+    enemy_males = canvas.create_image(500, 220, image=oppose, anchor="center")
     create_platform(20,500,5,6)
     create_platform(280,400,5,3)
     create_platform(440,280,2,4)
@@ -294,16 +346,44 @@ def level_2():
     create_platform(950,480,2,6)
     create_platform(1020,150,2,5)
     gravity()
+    check_collision_loop_coin()
+    animate()
+    lost()
 
+def levelTable():
+    global backGround,player,coins,enemy_males,level1_btn,level2_btn
+    canvas.delete("all")
+    btn.destroy()
+    exitBtn.destroy()
+    level_btn.destroy()
+    startGame()
+    backGround = canvas.create_image(0,0,image=back)
+    level1_btn = Button(text="Level1", font=("Metal Mania", 15), command=level_1)
+    level2_btn = Button(text="Level2", font=("Metal Mania", 15), command=level_2)
+    level1_btn.place(x=530, y=370)
+    level2_btn.place(x=630, y=370)
+def Start():
+    global backGround, player, coins, enemy_males, level1_btn, level2_btn
+    canvas.delete("all")
+    btn.destroy()
+    exitBtn.destroy()
+    startGame()
+    backGround = canvas.create_image(0, 0, image=back)
+    canvas.create_text(580, 200, text="Click To Start", font=("Metal Mania", 50), fill="red",tags="start_game")
 # Game Start Screen
-title = canvas.create_text(580,200,text="Shinobi Run",font=("Metal Mania",50),fill="white")
+def getStatus():
+    res = GAMESTATUS_LEVEL_1
+    return res
+title = canvas.create_text(580, 200, text="Shinobi Run", font=("Metal Mania", 50), fill="white")
 winsound.PlaySound("sound/opening.wav", winsound.SND_ASYNC)
 # Button
-btn = Button(text="Newgame",font=("Metal Mania",15),command=gamePlay)
-exitBtn = Button(text="Exit",font=("Metal Mania",15),command=root.destroy)
-btn.place(x=530,y=300)
-exitBtn.place(x=550,y=380)
-canvas.pack(expand = True,fill='both')
+btn = Button(text="Newgame", font=("Metal Mania", 15), command=Start)
+level_btn = Button(text="Level", font=("Metal Mania", 15), command=levelTable)
+exitBtn = Button(text="Exit", font=("Metal Mania", 15), command=root.destroy)
+btn.place(x=530, y=300)
+level_btn.place(x=530, y=370)
+exitBtn.place(x=530, y=440)
+canvas.pack(expand=True, fill='both')
 root.bind("<Key>", start_move)
 root.bind("<KeyRelease>", stop_move)
 root.mainloop()
