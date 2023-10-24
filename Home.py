@@ -218,22 +218,6 @@ def death():
     canvas.delete('tiles')
     # winsound.PlaySound("sound/Hurt.wav", winsound.SND_NOWAIT)
     canvas.create_text(580, 200, text="You Died", font=("Metal Mania", 50), fill="red")
-def check_collision(image1, image2):
-    x1, y1, x2, y2 = canvas.bbox(image1)
-    x3, y3, x4, y4 = canvas.bbox(image2)
-
-    if (x1 < x4 and x2 > x3) and (y1 < y4 and y2 > y3):
-        return True
-    else:
-        return False
-def check_collision_loop():
-    if check_collision(coins, player):
-        print("Collision detected!")
-        canvas.create_text(580, 200, text="You win", font=("Metal Mania", 50), fill="green")
-        winsound.PlaySound("sound/victory.wav", winsound.SND_ASYNC)
-        canvas.delete(coins)
-    else:
-        root.after(10, check_collision_loop)
 def jump(force):
     if force > 0:
         if check_movement(0, -force):
@@ -293,8 +277,24 @@ def level_1():
     create_platform(1000, 260, 1, 3)
     coins = canvas.create_image(900, 200, image=coin_1)
     gravity()
-    check_collision_loop()
-    move_enemy_male()
+    def check_collision(image1, image2):
+        x1, y1, x2, y2 = canvas.bbox(image1)
+        x3, y3, x4, y4 = canvas.bbox(image2)
+
+        if (x1 < x4 and x2 > x3) and (y1 < y4 and y2 > y3):
+            return True
+        else:
+            return False
+    def check_collision_loop():
+        global getGameStatus
+        if check_collision(coins, player):
+            print("Collision detected!")
+            canvas.create_text(580, 200, text="You win", font=("Metal Mania", 50), fill="green")
+            winsound.PlaySound("sound/victory.wav", winsound.SND_ASYNC)
+            canvas.delete(coins)
+        else:
+            root.after(10, check_collision_loop)
+            move_enemy_male()
 def level_2():
     global backGround,player,coins,enemy_males,hid_rect
     canvas.delete("all")
@@ -316,13 +316,38 @@ def level_2():
     create_platform(1000, 260, 1, 3)
     coins = canvas.create_image(900, 200, image=coin_1)
     gravity()
-    check_collision_loop()
+    def check_collision(image1, image2):
+        x1, y1, x2, y2 = canvas.bbox(image1)
+        x3, y3, x4, y4 = canvas.bbox(image2)
+
+        if (x1 < x4 and x2 > x3) and (y1 < y4 and y2 > y3):
+            return True
+        else:
+            return False
+    def check_collision_loop():
+        global getGameStatus
+        if check_collision(coins, player):
+            print("Collision detected!")
+            canvas.create_text(580, 200, text="You win", font=("Metal Mania", 50), fill="green")
+            winsound.PlaySound("sound/victory.wav", winsound.SND_ASYNC)
+            canvas.delete(coins)
+            getGameStatus = "Level 2 complete"
+        else:
+            root.after(10, check_collision_loop)
     move_enemy_male()
+def gamePlay():
+    global getGameStatus
+    getGameStatus = "Not complete"
+    if getGameStatus == "Not complete":
+        level_1()
+    elif getGameStatus == "Level 1 complete":
+        level_2()
+
 # Game Start Screen
 title = canvas.create_text(580,200,text="Shinobi Run",font=("Metal Mania",50),fill="white")
 winsound.PlaySound("sound/opening.wav", winsound.SND_ASYNC)
 # Button
-btn = Button(text="Newgame",font=("Metal Mania",15),command=level_1)
+btn = Button(text="Newgame",font=("Metal Mania",15),command=gamePlay)
 exitBtn = Button(text="Exit",font=("Metal Mania",15),command=root.destroy)
 btn.place(x=530,y=300)
 exitBtn.place(x=550,y=380)
