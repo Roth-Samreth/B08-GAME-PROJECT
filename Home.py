@@ -359,6 +359,26 @@ def level_2():
     check_collision_loop_coin2()
     animate1()
     lost2()
+def level_3():
+    global backGround,player
+    canvas.delete("all")
+    btn.destroy()
+    exitBtn.destroy()
+    startGame()
+    backGround = canvas.create_image(0,0,image=back)
+    player = canvas.create_image(30, 340, image=user)
+    create_platform(20,400,1,4)
+    create_platform(200,400,5,3)
+    create_platform(380,460,2,3)
+    create_platform(540,380,1,3)
+    create_platform(420,290,1,3)
+    create_platform(600,280,1,5)
+    create_platform(870,450,1,3)
+    create_platform(1000,350,1,1)
+    create_platform(1080,270,1,3)
+    create_platform(920,200,1,3)
+    create_platform(1080,120,1,3)
+    gravity()
 # Game Start Screen
 def title():
     global gamestatus, btn, exitBtn, title
