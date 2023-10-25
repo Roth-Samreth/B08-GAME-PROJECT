@@ -271,7 +271,7 @@ def stop_move(event):
 def animate():
     global direction
     x, y = canvas.coords(enemy_males)
-    if x + speed * direction > 550 or x + speed * direction < 340:
+    if x + speed * direction > 340 or x + speed * direction < 500:
         direction = -direction
         canvas.move(enemy_males, speed * direction, 0)
         enemy_male_back()
@@ -305,7 +305,6 @@ def level_1():
     exitBtn.destroy()
     level1_btn.destroy()
     level2_btn.destroy()
-    level_btn.destroy()
     startGame()
     backGround = canvas.create_image(0,0,image=back)
     backGround = canvas.create_image(1150, 0, image=back)
@@ -331,7 +330,6 @@ def level_2():
     exitBtn.destroy()
     level1_btn.destroy()
     level2_btn.destroy()
-    level_btn.destroy()
     startGame()
     backGround = canvas.create_image(0,0,image=back)
     player = canvas.create_image(30, 350, image=user)
@@ -355,7 +353,6 @@ def levelTable():
     canvas.delete("all")
     btn.destroy()
     exitBtn.destroy()
-    level_btn.destroy()
     startGame()
     backGround = canvas.create_image(0,0,image=back)
     level1_btn = Button(text="Level1", font=("Metal Mania", 15), command=level_1)
@@ -363,13 +360,14 @@ def levelTable():
     level1_btn.place(x=530, y=370)
     level2_btn.place(x=630, y=370)
 def Start():
-    global backGround, player, coins, enemy_males, level1_btn, level2_btn
+    global backGround, player, coins, enemy_males, level1_btn, level2_btn,level_1
     canvas.delete("all")
     btn.destroy()
     exitBtn.destroy()
     startGame()
     backGround = canvas.create_image(0, 0, image=back)
-    canvas.create_text(580, 200, text="Click To Start", font=("Metal Mania", 50), fill="red",tags="start_game")
+    startbtn = Button(text="Start", font=("Metal Mania", 15), command=level_1)
+    startbtn.place(x=530, y=370)
 # Game Start Screen
 def getStatus():
     res = GAMESTATUS_LEVEL_1
@@ -377,12 +375,10 @@ def getStatus():
 title = canvas.create_text(580, 200, text="Shinobi Run", font=("Metal Mania", 50), fill="white")
 winsound.PlaySound("sound/opening.wav", winsound.SND_ASYNC)
 # Button
-btn = Button(text="Newgame", font=("Metal Mania", 15), command=Start)
-level_btn = Button(text="Level", font=("Metal Mania", 15), command=levelTable)
+btn = Button(text="Newgame", font=("Metal Mania", 15), command=levelTable)
 exitBtn = Button(text="Exit", font=("Metal Mania", 15), command=root.destroy)
 btn.place(x=530, y=300)
-level_btn.place(x=530, y=370)
-exitBtn.place(x=530, y=440)
+exitBtn.place(x=530, y=400)
 canvas.pack(expand=True, fill='both')
 root.bind("<Key>", start_move)
 root.bind("<KeyRelease>", stop_move)
