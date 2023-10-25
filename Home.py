@@ -314,7 +314,6 @@ def level_3():
     create_platform(920,200,1,3)
     create_platform(1080,120,1,3)
     gravity()
-# okay
 # Game Start Screen
 title = canvas.create_text(580,200,text="Shinobi Run",font=("Metal Mania",50),fill="white")
 winsound.PlaySound("sound/opening.wav", winsound.SND_ASYNC)
