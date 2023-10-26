@@ -296,7 +296,6 @@ def move():
             canvas.move(player, x, 0)
         root.after(TIMED_LOOP, move)
 
-
 def start_move(event):
     if event.keysym not in keyPressed:
         keyPressed.append(event.keysym)
@@ -344,14 +343,16 @@ def level_display():
     global btn_level1,btn_level2,btn_level3
     canvas.delete("all")
     backGround = canvas.create_image(0, 0, image=back)
+    title = canvas.create_text(580, 200, text="Shinobi Run", font=("Metal Mania", 50), fill="white")
+    lable = canvas.create_text(580, 250, text="Level Selection", font=("Metal Mania", 20), fill="white")
     btn.destroy()
     exitBtn.destroy()
     btn_level1 = Button(text="Level 1", font=("Metal Mania", 15), command=level_1)
     btn_level2 = Button(text="Level 2", font=("Metal Mania", 15), command=level_2)
     btn_level3 = Button(text="Level 3", font=("Metal Mania", 15), command=level_3)
-    btn_level1.place(x=100,y=250)
-    btn_level2.place(x=200, y=250)
-    btn_level3.place(x=300, y=250)
+    btn_level1.place(x=440,y=350)
+    btn_level2.place(x=540, y=350)
+    btn_level3.place(x=640, y=350)
 def level_1():
     global backGround, player, coins, enemy_males
     canvas.delete("all")
@@ -366,7 +367,6 @@ def level_1():
     backGround = canvas.create_image(2000, 0, image=back)
     player = canvas.create_image(30, 340, image=user)
     create_platform(20, 400, 5, 8)
-    # place_coint(80,340,1,5)
     create_platform(440, 150, 2, 2)
     create_platform(340, 300, 4, 8)
     create_platform(650, 400, 1, 4)
@@ -468,6 +468,7 @@ img5 = ImageTk.PhotoImage(Image.open("Image/Run5.png"))
 img6 = ImageTk.PhotoImage(Image.open("Image/Run6.png"))
 img7 = ImageTk.PhotoImage(Image.open("Image/Run7.png"))
 img8 = ImageTk.PhotoImage(Image.open("Image/Run8.png"))
+
 # Player Backward_______________________________
 img_b2 = ImageTk.PhotoImage(Image.open("runback/Run2.png"))
 img_b3 = ImageTk.PhotoImage(Image.open("runback/Run3.png"))
@@ -476,6 +477,7 @@ img_b5 = ImageTk.PhotoImage(Image.open("runback/Run5.png"))
 img_b6 = ImageTk.PhotoImage(Image.open("runback/Run6.png"))
 img_b7 = ImageTk.PhotoImage(Image.open("runback/Run7.png"))
 img_b8 = ImageTk.PhotoImage(Image.open("runback/Run8.png"))
+
 # Enemy male Forward______________________________
 img_e2 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-2.png"))
 img_e3 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-3.png"))
@@ -484,6 +486,7 @@ img_e5 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-5.png"))
 img_e6 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-6.png"))
 img_e7 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-7.png"))
 img_e8 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-8.png"))
+
 # Enemy male Backward_________________________________________________________
 img_eb2 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-boy-re-2.png"))
 img_eb3 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-boy-re-3.png"))
@@ -501,6 +504,8 @@ img_eg5 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-5.png"))
 img_eg6 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-6.png"))
 img_eg7 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-7.png"))
 img_eg8 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-8.png"))
+
+
 # Enemy male Backward_________________________________________________________
 img_egb2 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-2.png"))
 img_egb3 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-3.png"))
@@ -509,9 +514,9 @@ img_egb5 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-5.png"))
 img_egb6 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-6.png"))
 img_egb7 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-7.png"))
 img_egb8 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-8.png"))
+
 # Put the Background
 backGround = canvas.create_image(0,0,image=back)
-backGround = canvas.create_image(1150,0,image=back)
 
 title = canvas.create_text(580, 200, text="Shinobi Run", font=("Metal Mania", 50), fill="white")
 winsound.PlaySound("sound/opening.wav", winsound.SND_ASYNC)
