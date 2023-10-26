@@ -112,6 +112,45 @@ def enemy_male_back():
     elif k == 8:
         canvas.itemconfig(enemy_males, image=img_eb8)
     k += 1
+def enemyfemale():
+    global k
+    if k == 8:
+        k = 2
+    if k == 2:
+        canvas.itemconfig(enemy, image=img_eg2)
+    elif k == 3:
+        canvas.itemconfig(enemy, image=img_eg3)
+    elif k == 4:
+        canvas.itemconfig(enemy, image=img_eg4)
+    elif k == 5:
+        canvas.itemconfig(enemy, image=img_eg5)
+    elif k == 6:
+        canvas.itemconfig(enemy, image=img_eg6)
+    elif k == 7:
+        canvas.itemconfig(enemy, image=img_eg7)
+    elif k == 8:
+        canvas.itemconfig(enemy, image=img_eg8)
+    k += 1
+def enemyfemale_back():
+    global k
+    if k == 8:
+        k = 2
+    if k == 2:
+        canvas.itemconfig(enemy, image=img_egb2)
+    elif k == 3:
+        canvas.itemconfig(enemy, image=img_egb3)
+    elif k == 4:
+        canvas.itemconfig(enemy, image=img_egb4)
+    elif k == 5:
+        canvas.itemconfig(enemy, image=img_egb5)
+    elif k == 6:
+        canvas.itemconfig(enemy, image=img_egb6)
+    elif k == 7:
+        canvas.itemconfig(enemy, image=img_egb7)
+    elif k == 8:
+        canvas.itemconfig(enemy, image=img_egb8)
+    k += 1
+
 
 
 #     Moving enemy
@@ -193,6 +232,15 @@ def lost():
         hurt()
     else:
         root.after(10, lost)
+def lost1():
+    global gamestatus,backGround
+    if check_collision(player, enemy):
+        backGround = canvas.create_image(0, 0, image=back)
+        canvas.create_text(580, 200, text="You Died", font=("Metal Mania", 50), fill="red")
+        canvas.move(player, 0, 500)
+        hurt()
+    else:
+        root.after(10, lost1)
 def check_movement(dx=0, dy=0, checkGround=False):
     global player
     coord = canvas.bbox(player)
@@ -226,7 +274,6 @@ def death():
     canvas.delete('tiles')
     winsound.PlaySound("sound/Hurt.wav", winsound.SND_ASYNC)
     canvas.create_text(580, 200, text="You Died", font=("Metal Mania", 50), fill="red")
-
 def jump(force):
     if force > 0:
         if check_movement(0, -force):
@@ -276,15 +323,15 @@ def animate():
 
 def animate1():
     global direction
-    x, y = canvas.coords(enemy_males)
-    if x + speed * direction > 550 or x + speed * direction < 240:
+    x, y = canvas.coords(enemy)
+    if x + speed * direction > 710 or x + speed * direction <600:
         direction = -direction
-        canvas.move(enemy_males, speed * direction, 0)
-        enemy_male_back()
+        canvas.move(enemy, speed * direction, 0)
+        enemyfemale_back()
     else:
-        enemy_male()
-        canvas.move(enemy_males, speed * direction, 0)
-    root.after(100, animate)
+        canvas.move(enemy, speed * direction, 0)
+        enemyfemale_back()
+    root.after(100, animate1)
 
 def gravity():
     global tiles
@@ -332,7 +379,7 @@ def level_1():
     check_collision_loop_coin1()
     lost()
 def level_2():
-    global backGround, player, coins, enemy_males
+    global backGround, player, coins, enemy_males,enemy
     canvas.delete("all")
     btn.destroy()
     exitBtn.destroy()
@@ -354,10 +401,10 @@ def level_2():
     create_platform(1020, 150, 2, 5)
     gravity()
     check_collision_loop_coin2()
-    animate1()
+    animate()
     lost()
 def level_3():
-    global backGround, player, coins, enemy_males, start_btn, SPEED, GRAVITY_FORCE, JUMP_FORCE, TIMED_LOOP, gamestatus
+    global backGround, player, coins, enemy_males,enemy
     canvas.delete("all")
     btn.destroy()
     exitBtn.destroy()
@@ -368,6 +415,7 @@ def level_3():
     backGround = canvas.create_image(0,0,image=back3)
     player = canvas.create_image(30, 340, image=user)
     enemy_males = canvas.create_image(500, 400, image=oppose, anchor="center")
+    enemy = canvas.create_image(710, 225, image=oppose1, anchor="center")
     coins = canvas.create_image(1080, 80, image=coin_1)
     create_platform(20,400,1,4)
     create_platform(200,400,5,3)
@@ -382,20 +430,23 @@ def level_3():
     create_platform(1080,120,1,3)
     gravity()
     check_collision_loop_coin3()
+    animate()
     animate1()
     lost()
-# Game Start Screen
-# ____________________Create window
+    lost1()
+# ____________________Create window________________________________
 root = Tk()
 root.geometry(str(SCREENWIDTH)+"x"+str(SCREENHEIGHT))
 root.title("Shinobi Run")
 canvas = Canvas(root,width= SCREENWIDTH,height=SCREENHEIGHT)
+
 # Load image
 bg = Image.open("Image/10.png")
 bg2 = Image.open("Image/9.png")
 bg3 = Image.open("Image/8.png")
 pp = Image.open("Image/Run1.png")
 en = Image.open("Image/enemy/e-boy-1.png")
+en1 = Image.open("Image/enemy/e-girl-1.png")
 tile = Image.open("Image/Tile_01.png")
 coin = Image.open("Image/coin.png")
 
@@ -405,9 +456,10 @@ back2 = ImageTk.PhotoImage(bg2)
 back3 = ImageTk.PhotoImage(bg3)
 user = ImageTk.PhotoImage(pp)
 oppose = ImageTk.PhotoImage(en)
+oppose1 = ImageTk.PhotoImage(en1)
 tile_1 = ImageTk.PhotoImage(tile)
 coin_1 = ImageTk.PhotoImage(coin)
-# ___________________________________________Animation Images
+# ___________________________________________Animation Images________________________________
 # Player Forward________________________________________________________
 img2 = ImageTk.PhotoImage(Image.open("Image/Run2.png"))
 img3 = ImageTk.PhotoImage(Image.open("Image/Run3.png"))
@@ -416,16 +468,7 @@ img5 = ImageTk.PhotoImage(Image.open("Image/Run5.png"))
 img6 = ImageTk.PhotoImage(Image.open("Image/Run6.png"))
 img7 = ImageTk.PhotoImage(Image.open("Image/Run7.png"))
 img8 = ImageTk.PhotoImage(Image.open("Image/Run8.png"))
-
-# Enemy Forward
-img_e2 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-2.png"))
-img_e3 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-3.png"))
-img_e4 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-4.png"))
-img_e5 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-5.png"))
-img_e6 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-6.png"))
-img_e7 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-7.png"))
-img_e8 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-8.png"))
-# Player Backward________________________________________________________
+# Player Backward_______________________________
 img_b2 = ImageTk.PhotoImage(Image.open("runback/Run2.png"))
 img_b3 = ImageTk.PhotoImage(Image.open("runback/Run3.png"))
 img_b4 = ImageTk.PhotoImage(Image.open("runback/Run4.png"))
@@ -433,7 +476,15 @@ img_b5 = ImageTk.PhotoImage(Image.open("runback/Run5.png"))
 img_b6 = ImageTk.PhotoImage(Image.open("runback/Run6.png"))
 img_b7 = ImageTk.PhotoImage(Image.open("runback/Run7.png"))
 img_b8 = ImageTk.PhotoImage(Image.open("runback/Run8.png"))
-# Enemy Backward_________________________________________________________
+# Enemy male Forward______________________________
+img_e2 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-2.png"))
+img_e3 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-3.png"))
+img_e4 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-4.png"))
+img_e5 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-5.png"))
+img_e6 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-6.png"))
+img_e7 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-7.png"))
+img_e8 = ImageTk.PhotoImage(Image.open("Image/enemy/e-boy-8.png"))
+# Enemy male Backward_________________________________________________________
 img_eb2 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-boy-re-2.png"))
 img_eb3 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-boy-re-3.png"))
 img_eb4 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-boy-re-4.png"))
@@ -441,6 +492,23 @@ img_eb5 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-boy-re-5.png"))
 img_eb6 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-boy-re-6.png"))
 img_eb7 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-boy-re-7.png"))
 img_eb8 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-boy-re-8.png"))
+
+# Enemy Female Forward______________________________
+img_eg2 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-2.png"))
+img_eg3 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-3.png"))
+img_eg4 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-4.png"))
+img_eg5 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-5.png"))
+img_eg6 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-6.png"))
+img_eg7 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-7.png"))
+img_eg8 = ImageTk.PhotoImage(Image.open("Image/enemy/e-girl-8.png"))
+# Enemy male Backward_________________________________________________________
+img_egb2 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-2.png"))
+img_egb3 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-3.png"))
+img_egb4 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-4.png"))
+img_egb5 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-5.png"))
+img_egb6 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-6.png"))
+img_egb7 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-7.png"))
+img_egb8 = ImageTk.PhotoImage(Image.open("Image/enemy/re/e-girl-re-8.png"))
 # Put the Background
 backGround = canvas.create_image(0,0,image=back)
 backGround = canvas.create_image(1150,0,image=back)
